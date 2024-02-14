@@ -14,73 +14,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.waitFor = void 0;
 const puppeteer_1 = __importDefault(require("puppeteer"));
-const promises_1 = __importDefault(require("fs/promises"));
-const jimp_1 = __importDefault(require("jimp"));
-const pixelmatch_1 = __importDefault(require("pixelmatch"));
-const opencv_wasm_1 = require("opencv-wasm");
 const pinParser_1 = require("./pinParser");
 const parseCode_1 = require("./parseCode");
-function findPuzzlePosition(page) {
-    return __awaiter(this, void 0, void 0, function* () {
-        let images = yield page.$$eval('#captcha__puzzle canvas', (canvases) => canvases.map((canvas) => canvas.toDataURL().replace(/^data:image\/png;base64,/, '')));
-        yield promises_1.default.writeFile(`./puzzle.png`, images[1], 'base64');
-        let srcPuzzleImage = yield jimp_1.default.read('./puzzle.png');
-        let srcPuzzle = opencv_wasm_1.cv.matFromImageData(srcPuzzleImage.bitmap);
-        let dstPuzzle = new opencv_wasm_1.cv.Mat();
-        opencv_wasm_1.cv.cvtColor(srcPuzzle, srcPuzzle, opencv_wasm_1.cv.COLOR_BGR2GRAY);
-        opencv_wasm_1.cv.threshold(srcPuzzle, dstPuzzle, 127, 255, opencv_wasm_1.cv.THRESH_BINARY);
-        let kernel = opencv_wasm_1.cv.Mat.ones(5, 5, opencv_wasm_1.cv.CV_8UC1);
-        let anchor = new opencv_wasm_1.cv.Point(-1, -1);
-        opencv_wasm_1.cv.dilate(dstPuzzle, dstPuzzle, kernel, anchor, 1);
-        opencv_wasm_1.cv.erode(dstPuzzle, dstPuzzle, kernel, anchor, 1);
-        let contours = new opencv_wasm_1.cv.MatVector();
-        let hierarchy = new opencv_wasm_1.cv.Mat();
-        opencv_wasm_1.cv.findContours(dstPuzzle, contours, hierarchy, opencv_wasm_1.cv.RETR_EXTERNAL, opencv_wasm_1.cv.CHAIN_APPROX_SIMPLE);
-        let contour = contours.get(0);
-        let moment = opencv_wasm_1.cv.moments(contour);
-        return [
-            Math.floor(moment.m10 / moment.m00),
-            Math.floor(moment.m01 / moment.m00),
-        ];
-    });
-}
-function findDiffPosition(page) {
-    return __awaiter(this, void 0, void 0, function* () {
-        yield (0, exports.waitFor)(100);
-        let srcImage = yield jimp_1.default.read('./diff.png');
-        let src = opencv_wasm_1.cv.matFromImageData(srcImage.bitmap);
-        let dst = new opencv_wasm_1.cv.Mat();
-        let kernel = opencv_wasm_1.cv.Mat.ones(5, 5, opencv_wasm_1.cv.CV_8UC1);
-        let anchor = new opencv_wasm_1.cv.Point(-1, -1);
-        opencv_wasm_1.cv.threshold(src, dst, 127, 255, opencv_wasm_1.cv.THRESH_BINARY);
-        opencv_wasm_1.cv.erode(dst, dst, kernel, anchor, 1);
-        opencv_wasm_1.cv.dilate(dst, dst, kernel, anchor, 1);
-        opencv_wasm_1.cv.erode(dst, dst, kernel, anchor, 1);
-        opencv_wasm_1.cv.dilate(dst, dst, kernel, anchor, 1);
-        opencv_wasm_1.cv.cvtColor(dst, dst, opencv_wasm_1.cv.COLOR_BGR2GRAY);
-        opencv_wasm_1.cv.threshold(dst, dst, 150, 255, opencv_wasm_1.cv.THRESH_BINARY_INV);
-        let contours = new opencv_wasm_1.cv.MatVector();
-        let hierarchy = new opencv_wasm_1.cv.Mat();
-        opencv_wasm_1.cv.findContours(dst, contours, hierarchy, opencv_wasm_1.cv.RETR_EXTERNAL, opencv_wasm_1.cv.CHAIN_APPROX_SIMPLE);
-        let contour = contours.get(0);
-        let moment = opencv_wasm_1.cv.moments(contour);
-        return [
-            Math.floor(moment.m10 / moment.m00),
-            Math.floor(moment.m01 / moment.m00),
-        ];
-    });
-}
-function saveDiffImage() {
-    return __awaiter(this, void 0, void 0, function* () {
-        const originalImage = yield jimp_1.default.read('./original.png');
-        const captchaImage = yield jimp_1.default.read('./captcha.png');
-        const { width, height } = originalImage.bitmap;
-        const diffImage = new jimp_1.default(width, height);
-        const diffOptions = { includeAA: true, threshold: 0.1 };
-        (0, pixelmatch_1.default)(originalImage.bitmap.data, captchaImage.bitmap.data, diffImage.bitmap.data, width, height, diffOptions);
-        diffImage.write('./diff.png');
-    });
-}
 /**
  *
  * @param milliseconds - The milliseconds of waiting time
