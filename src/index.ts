@@ -3,10 +3,6 @@ import requestHandler, { waitFor } from './module/request';
 import { processImage } from './processImage';
 import { unlinkSync } from 'fs';
 
-const rootDirectory: string = __dirname;
-const imageName: string = 'success.png';
-const imagePath: string = path.join(rootDirectory, imageName);
-
 const Parser = {
   purchase: async (
     playerId: string,
@@ -15,10 +11,10 @@ const Parser = {
     serial: string,
     pin: string
   ) => await requestHandler(playerId, diamonds, paymentType, serial, pin),
-  successScreenshot: async () => {
+  successScreenshot: async (imagePath: string) => {
     const processedImage = await processImage(imagePath);
 
-    unlinkSync(imageName);
+    unlinkSync('success.png');
 
     return processedImage;
   },
