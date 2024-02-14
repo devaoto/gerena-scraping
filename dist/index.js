@@ -31,24 +31,17 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.waitFor = void 0;
-const path_1 = __importDefault(require("path"));
 const request_1 = __importStar(require("./module/request"));
 Object.defineProperty(exports, "waitFor", { enumerable: true, get: function () { return request_1.waitFor; } });
 const processImage_1 = require("./processImage");
 const fs_1 = require("fs");
-const rootDirectory = __dirname;
-const imageName = 'success.png';
-const imagePath = path_1.default.join(rootDirectory, imageName);
 const Parser = {
     purchase: (playerId, diamonds, paymentType, serial, pin) => __awaiter(void 0, void 0, void 0, function* () { return yield (0, request_1.default)(playerId, diamonds, paymentType, serial, pin); }),
-    successScreenshot: () => __awaiter(void 0, void 0, void 0, function* () {
+    successScreenshot: (imagePath) => __awaiter(void 0, void 0, void 0, function* () {
         const processedImage = yield (0, processImage_1.processImage)(imagePath);
-        (0, fs_1.unlinkSync)(imageName);
+        (0, fs_1.unlinkSync)('success.png');
         return processedImage;
     }),
 };
