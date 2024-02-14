@@ -1,5 +1,5 @@
 import path from 'path';
-import requestHandler from './module/request';
+import requestHandler, { waitFor } from './module/request';
 import { processImage } from './processImage';
 import { unlinkSync } from 'fs';
 
@@ -24,4 +24,5 @@ const Parser = {
   },
 };
 
+export { waitFor };
 export default Parser;
