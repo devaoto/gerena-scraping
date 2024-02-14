@@ -1,0 +1,36 @@
+{
+  "name": "gerena-scraping",
+  "version": "1.0.0",
+  "description": "Module to scrape gerena",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Tantrik Inc.",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^20.11.15",
+    "@types/numjs": "^0.16.7",
+    "@types/pixelmatch": "^5.2.6",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.3"
+  },
+  "opencv4nodejs": {
+    "disableAutoBuild": 1,
+    "opencvIncludeDir": "C:\\tools\\opencv\\build\\include",
+    "opencvLibDir": "C:\\tools\\opencv\\build\\x64\\vc14\\lib",
+    "opencvBinDir": "C:\\tools\\opencv\\build\\x64\\vc14\\bin"
+  },
+  "dependencies": {
+    "@google-cloud/speech": "^6.1.1",
+    "jimp": "^0.22.10",
+    "numjs": "^0.16.1",
+    "numpy": "^0.0.1",
+    "opencv-wasm": "^4.3.0-10",
+    "opencv4nodejs": "^5.6.0",
+    "pixelmatch": "^5.3.0",
+    "puppeteer": "^22.0.0",
+    "sharp": "^0.33.2"
+  }
+}
