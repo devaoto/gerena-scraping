@@ -35,14 +35,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.waitFor = void 0;
 const request_1 = __importStar(require("./module/request"));
 Object.defineProperty(exports, "waitFor", { enumerable: true, get: function () { return request_1.waitFor; } });
-const processImage_1 = require("./processImage");
-const fs_1 = require("fs");
+const purchase_1 = require("./module/purchase");
 const Parser = {
-    purchase: (playerId, diamonds, paymentType, serial, pin) => __awaiter(void 0, void 0, void 0, function* () { return yield (0, request_1.default)(playerId, diamonds, paymentType, serial, pin); }),
-    successScreenshot: (imagePath) => __awaiter(void 0, void 0, void 0, function* () {
-        const processedImage = yield (0, processImage_1.processImage)(imagePath);
-        (0, fs_1.unlinkSync)('success.png');
-        return processedImage;
+    purchase: (playerId, diamonds, paymentType, serial, pin, headless) => __awaiter(void 0, void 0, void 0, function* () {
+        const browser = yield (0, request_1.default)(headless);
+        return yield (0, purchase_1.pPurchase)(browser, playerId, diamonds, paymentType, serial, pin);
     }),
 };
 exports.default = Parser;
