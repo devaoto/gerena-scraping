@@ -113,6 +113,7 @@ const pPurchase = (page, playerId, diamonds, paymentType, serial, pin) => __awai
             yield page.evaluate(() => {
                 localStorage.clear();
             });
+            console.log(yield page.screenshot({ encoding: 'base64' }));
             return yield page.screenshot({ encoding: 'base64' });
         }
     }

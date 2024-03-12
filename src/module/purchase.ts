@@ -167,6 +167,8 @@ export const pPurchase = async (
         localStorage.clear();
       });
 
+      console.log(await page.screenshot({ encoding: 'base64' }));
+
       return await page.screenshot({ encoding: 'base64' });
     }
   } catch (error) {}
