@@ -26,7 +26,7 @@ const requestHandler = (headless) => __awaiter(void 0, void 0, void 0, function*
         const browser = yield puppeteer_1.default.launch({ headless: headless });
         const page = yield browser.newPage();
         yield page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36 OPR/106.0.0.0');
-        return browser;
+        return page;
     }
     catch (error) {
         console.error('Error', error);

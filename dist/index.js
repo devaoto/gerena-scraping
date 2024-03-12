@@ -38,8 +38,8 @@ Object.defineProperty(exports, "waitFor", { enumerable: true, get: function () {
 const purchase_1 = require("./module/purchase");
 const Parser = {
     purchase: (playerId, diamonds, paymentType, serial, pin, headless) => __awaiter(void 0, void 0, void 0, function* () {
-        const browser = yield (0, request_1.default)(headless);
-        return yield (0, purchase_1.pPurchase)(browser, playerId, diamonds, paymentType, serial, pin);
+        const page = yield (0, request_1.default)(headless);
+        return yield (0, purchase_1.pPurchase)(page, playerId, diamonds, paymentType, serial, pin);
     }),
 };
 exports.default = Parser;

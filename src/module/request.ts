@@ -1,6 +1,4 @@
-import puppeteer, { Browser } from 'puppeteer';
-import { parsePin } from './pinParser';
-import { parseCode } from './parseCode';
+import puppeteer, { Page } from 'puppeteer';
 
 /**
  *
@@ -13,7 +11,7 @@ export const waitFor = (milliseconds: number) =>
 
 const requestHandler = async (
   headless: boolean | 'shell'
-): Promise<Browser | undefined> => {
+): Promise<Page | undefined> => {
   try {
     const browser = await puppeteer.launch({ headless: headless });
 
@@ -22,7 +20,7 @@ const requestHandler = async (
       'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36 OPR/106.0.0.0'
     );
 
-    return browser as Browser;
+    return page;
   } catch (error) {
     console.error('Error', error);
   }

@@ -1,10 +1,10 @@
 import { waitFor } from './request';
-import { Browser } from 'puppeteer';
+import type { Page } from 'puppeteer';
 import { parsePin } from './pinParser';
 import { parseCode } from './parseCode';
 
 export const pPurchase = async (
-  browser: Browser,
+  page: Page,
   playerId: string,
   diamonds: number,
   paymentType: 'gift-card' | 'voucher',
@@ -12,7 +12,6 @@ export const pPurchase = async (
   pin: string
 ) => {
   try {
-    const page = await browser.newPage();
     await page.goto('https://shop.garena.my/app');
     await waitFor(2000);
 
@@ -158,11 +157,17 @@ export const pPurchase = async (
 
       await waitFor(10000);
 
-      const imageBuffer = await page.screenshot({ encoding: 'base64' });
+      const cookies = await page.cookies();
 
-      await waitFor(1000);
+      for (const cookie of cookies) {
+        await page.deleteCookie(cookie);
+      }
 
-      return imageBuffer;
+      await page.evaluate(() => {
+        localStorage.clear();
+      });
+
+      return await page.screenshot({ encoding: 'base64' });
     }
   } catch (error) {}
 };

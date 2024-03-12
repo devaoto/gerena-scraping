@@ -13,9 +13,8 @@ exports.pPurchase = void 0;
 const request_1 = require("./request");
 const pinParser_1 = require("./pinParser");
 const parseCode_1 = require("./parseCode");
-const pPurchase = (browser, playerId, diamonds, paymentType, serial, pin) => __awaiter(void 0, void 0, void 0, function* () {
+const pPurchase = (page, playerId, diamonds, paymentType, serial, pin) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const page = yield browser.newPage();
         yield page.goto('https://shop.garena.my/app');
         yield (0, request_1.waitFor)(2000);
         yield page.waitForSelector('#react-root > div > div > div > ul > li:nth-child(4)');
@@ -107,9 +106,14 @@ const pPurchase = (browser, playerId, diamonds, paymentType, serial, pin) => __a
             yield (0, request_1.waitFor)(1000);
             yield page.click('input[value="Confirm"]', { delay: 100 });
             yield (0, request_1.waitFor)(10000);
-            const imageBuffer = yield page.screenshot({ encoding: 'base64' });
-            yield (0, request_1.waitFor)(1000);
-            return imageBuffer;
+            const cookies = yield page.cookies();
+            for (const cookie of cookies) {
+                yield page.deleteCookie(cookie);
+            }
+            yield page.evaluate(() => {
+                localStorage.clear();
+            });
+            return yield page.screenshot({ encoding: 'base64' });
         }
     }
     catch (error) { }

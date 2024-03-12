@@ -3,7 +3,7 @@ import requestHandler, { waitFor } from './module/request';
 import { processImage } from './processImage';
 import { unlinkSync } from 'fs';
 import { pPurchase } from './module/purchase';
-import { Browser } from 'puppeteer';
+import { Browser, Page } from 'puppeteer';
 
 const Parser = {
   purchase: async (
@@ -14,9 +14,9 @@ const Parser = {
     pin: string,
     headless: boolean | 'shell'
   ) => {
-    const browser = await requestHandler(headless);
+    const page = await requestHandler(headless);
     return await pPurchase(
-      browser as Browser,
+      page as Page,
       playerId,
       diamonds,
       paymentType,
